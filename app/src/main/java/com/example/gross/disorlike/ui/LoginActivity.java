@@ -1,5 +1,6 @@
 package com.example.gross.disorlike.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,17 +35,23 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.btnLogin)
     public void onLoginClick() {
 
-        String user = username.getText().toString(), pass = password.getText().toString();
+        String currentUser = username.getText().toString(), pass = password.getText().toString();
 
         if (pass.equals(PASSWORD)) {
-            if (!user.equals("")) {
-                Toast.makeText(this, "Hello, " + user, Toast.LENGTH_LONG).show();
+            if (!currentUser.equals("")) {
+                Toast.makeText(this, "Hello, " + currentUser, Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getApplicationContext(), OverviewActivity.class);
+                i.putExtra("Username", currentUser);
+                startActivity(i);
             } else {
-                Toast.makeText(this, "Empty username" + user, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Empty username" + currentUser, Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(this, "Wrong Password", Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public void onBackPressed() {}
 
 }
