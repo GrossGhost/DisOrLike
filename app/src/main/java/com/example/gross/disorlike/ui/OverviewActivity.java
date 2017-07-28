@@ -3,16 +3,28 @@ package com.example.gross.disorlike.ui;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.gross.disorlike.R;
+import com.example.gross.disorlike.controller.RestManager;
+import com.example.gross.disorlike.model.Child;
+import com.example.gross.disorlike.model.RedditGson;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OverviewActivity extends AppCompatActivity {
     Intent i;
+    private List<Child> listChild;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +35,33 @@ public class OverviewActivity extends AppCompatActivity {
 
         i = getIntent();
         toolbar.setSubtitle("Logged, as " + i.getStringExtra("Username"));
+        loadList();
+
+    }
+
+    private void loadList() {
+
+        RestManager restManager = new RestManager();
+        final Call<RedditGson> listCall = restManager.getApiService().getAwwJson();
+        listCall.enqueue(new Callback<RedditGson>() {
+            @Override
+            public void onResponse(@NonNull Call<RedditGson> call, @NonNull Response<RedditGson> response) {
+                listChild = response.body().getData().getChildren();
+                /*for (int i = 0; i<listChild.size(); i++) {
+                    Log.i("listChild", listChild.get(i).getData().getTitle());
+                    Log.i("listChild", listChild.get(i).getData().getUrl());
+                    Log.i("listChild", listChild.get(i).getData().getSubreddit());
+                    Log.i("listChild", listChild.get(i).getData().getThumbnail());
+                }*/
+
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<RedditGson> call, @NonNull Throwable t) {
+                Log.d("RESPONSE","fail");
+            }
+        });
+
     }
 
     @Override
