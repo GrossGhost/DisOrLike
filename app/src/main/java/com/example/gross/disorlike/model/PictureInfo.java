@@ -36,11 +36,19 @@ public class PictureInfo {
         this.title = title;
     }
 
-    public String getSubreddit() {        return subreddit;    }
+    public String getSubreddit() {
+        return subreddit;
+    }
 
-    public void setSubreddit(String subreddit) {        this.subreddit = subreddit;    }
+    public void setSubreddit(String subreddit) {
+        this.subreddit = subreddit;
+    }
 
-    public String getThumbnail() {        return thumbnail;    }
+    public String getThumbnail() {
+        return thumbnail;
+    }
 
-    public void setThumbnail(String thumbnail) {        this.thumbnail = thumbnail;    }
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
 }
