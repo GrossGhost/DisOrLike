@@ -12,6 +12,7 @@ import com.example.gross.disorlike.R;
 import com.example.gross.disorlike.model.PictureInfo;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,12 +20,24 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
 
     private LayoutInflater inflater;
     private List<PictureInfo> pictureList;
+    private String lastLoadedItem;
 
-    public RedditAdapter(Context context, List<PictureInfo> listPicture){
+    public RedditAdapter(Context context){
         this.inflater = LayoutInflater.from(context);
-        this.pictureList = listPicture;
+        this.pictureList = new ArrayList<>();
+        this.lastLoadedItem = "";
     }
 
+    public void addItem (PictureInfo pictureItem){
+        this.pictureList.add(pictureItem);
+    }
+
+    public String getlastLoadedItem(){
+        return this.lastLoadedItem;
+    }
+    public void setlastLoadedItem(String lastItem){
+        this.lastLoadedItem = lastItem;
+    }
 
     @Override
     public RecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,7 +57,6 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
     public int getItemCount() {
         return this.pictureList.size();
     }
-
 
 }
 

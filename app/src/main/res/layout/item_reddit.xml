@@ -1,29 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardViewReddit"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card:cardElevation="1dp"
-    card:cardUseCompatPadding="true">
+    card:cardBackgroundColor="@android:color/holo_blue_bright"
+    card:cardElevation="5dp"
+    card:cardUseCompatPadding="true"
+    card:layout_collapseParallaxMultiplier="1.0">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="175dp">
+
+        <TextView
+            android:id="@+id/textReddit"
+            android:layout_width="match_parent"
+            android:layout_height="175dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/imgReddit"
+            android:layout_toRightOf="@+id/imgReddit"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@android:color/black" />
 
         <ImageView
             android:id="@+id/imgReddit"
-            android:layout_width="120dp"
-            android:layout_height="140dp"
+            android:layout_width="140dp"
+            android:layout_height="169dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="3dp"
+            android:layout_marginStart="3dp"
             android:scaleType="fitXY" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:id="@+id/textReddit"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/imgReddit"
-            android:layout_toEndOf="@+id/imgReddit" />
 
     </RelativeLayout>
 
