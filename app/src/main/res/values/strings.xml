@@ -1,10 +1,13 @@
 <resources>
-    <string name="app_name">DisOrLike</string>
+    <string name="app_name">ReviewerForReddit</string>
 
     <string name="title_activity_login">LoginActivity</string>
-    <string name="username">Username :</string>
-    <string name="password">Password :</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="title_activity_overview">OverviewActivity</string>
+    <string name="session_username">SessionUsername</string>
+    <string name="session_modhash">SessionModhash</string>
     <string name="logout">Logout</string>
+
 </resources>

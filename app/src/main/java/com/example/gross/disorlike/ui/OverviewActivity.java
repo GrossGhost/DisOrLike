@@ -2,6 +2,7 @@ package com.example.gross.disorlike.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.gross.disorlike.R;
 import com.example.gross.disorlike.controller.EndlessScrollListener;
@@ -26,15 +28,19 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.gross.disorlike.ui.LoginActivity.MODHASH;
+import static com.example.gross.disorlike.ui.LoginActivity.REDDIT_SESSION;
+import static com.example.gross.disorlike.ui.LoginActivity.USERNAME;
+
 public class OverviewActivity extends AppCompatActivity {
+
+    private static final String TAG = "OverviewActivity";
 
     @BindView(R.id.recViewReddit)
     RecyclerView recViewReddit;
     private Intent fromLoginIntent;
     private RedditAdapter redditAdapter;
 
-    public OverviewActivity() {
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,22 +74,27 @@ public class OverviewActivity extends AppCompatActivity {
     private void loadList() {
 
         RestManager restManager = new RestManager();
-        Call<RedditGson> listCall = restManager.getApiService().getAwwJson(redditAdapter.getlastLoadedItem());
-        listCall.enqueue(new Callback<RedditGson>() {
+        Call<RedditGson> call = restManager.getApiService().getAwwJson(redditAdapter.getlastLoadedItem());
+        call.enqueue(new Callback<RedditGson>() {
             @Override
             public void onResponse(@NonNull Call<RedditGson> call, @NonNull Response<RedditGson> response) {
 
-                for (int i = 0; i < response.body().getData().getChildren().size(); i++) {
-                    redditAdapter.addItem(response.body().getData().getChildren().get(i).getData());
+                try{
+                    for (int i = 0; i < response.body().getData().getChildren().size(); i++) {
+                        redditAdapter.addItem(response.body().getData().getChildren().get(i).getData());
+                    }
+                    redditAdapter.setlastLoadedItem(response.body().getData().getAfter());
+                    redditAdapter.notifyDataSetChanged();
+                }catch (NullPointerException e){
+                    Log.e(TAG, "onResponse: NullPointerException" + e.getMessage());
                 }
-                redditAdapter.setlastLoadedItem(response.body().getData().getAfter());
-                redditAdapter.notifyDataSetChanged();
+
 
             }
 
             @Override
             public void onFailure(@NonNull Call<RedditGson> call, @NonNull Throwable t) {
-                Log.d("RESPONSE", "fail");
+                Toast.makeText(OverviewActivity.this, "An Error Call", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -105,6 +116,12 @@ public class OverviewActivity extends AppCompatActivity {
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferences preferences = getSharedPreferences(REDDIT_SESSION,MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString(USERNAME, "");
+                            editor.putString(MODHASH, "");
+                            editor.apply();
+
                             Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(i);
                         }
