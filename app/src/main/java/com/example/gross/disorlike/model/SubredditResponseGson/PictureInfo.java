@@ -1,4 +1,4 @@
-package com.example.gross.disorlike.model;
+package com.example.gross.disorlike.model.SubredditResponseGson;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -19,6 +19,31 @@ public class PictureInfo {
     @SerializedName("thumbnail")
     @Expose
     private String thumbnail;
+
+    @SerializedName("likes")
+    @Expose
+    private Boolean likes;
+
+    @SerializedName("score")
+    @Expose
+    private String score;
+
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+
+    public Boolean getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Boolean likes) {
+        this.likes = likes;
+    }
 
     public String getUrl() {
         return url;

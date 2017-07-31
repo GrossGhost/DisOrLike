@@ -2,14 +2,16 @@ package com.example.gross.disorlike.controller;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.gross.disorlike.R;
-import com.example.gross.disorlike.model.PictureInfo;
+import com.example.gross.disorlike.model.SubredditResponseGson.PictureInfo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,6 +53,19 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
                 .load(pictureList.get(position).getThumbnail())
                 .into(holder.redditImage);
         holder.redditText.setText(pictureList.get(position).getTitle());
+        holder.scoreText.setText(pictureList.get(position).getScore());
+        holder.dislikeImage.setImageResource(R.drawable.ic_thumb_down_black_24dp);
+        holder.likeImage.setImageResource(R.drawable.ic_thumb_up_black_24dp);
+
+        Boolean likes = pictureList.get(position).getLikes();
+        Log.d("LIKES", ""+likes);
+        if (likes != null ){
+            if (likes){
+                holder.likeImage.setImageResource(R.drawable.ic_thumb_up_green_24dp);
+            }else{
+                holder.dislikeImage.setImageResource(R.drawable.ic_thumb_down_red_24dp);
+            }
+        }
     }
 
     @Override
@@ -62,12 +77,16 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
 
 class RecyclerViewHolders extends RecyclerView.ViewHolder{
 
-    ImageView redditImage;
-    TextView redditText;
+    ImageView redditImage, likeImage, dislikeImage;
+    TextView redditText, scoreText;
 
     RecyclerViewHolders(View itemView) {
         super(itemView);
-        redditImage = (ImageView) itemView.findViewById(R.id.imgReddit);
-        redditText = (TextView) itemView.findViewById(R.id.textReddit);
+        redditImage = (ImageView) itemView.findViewById(R.id.image_reddit);
+        likeImage = (ImageView) itemView.findViewById(R.id.image_like);
+        dislikeImage = (ImageView) itemView.findViewById(R.id.image_dislike);
+        redditText = (TextView) itemView.findViewById(R.id.text_reddit);
+        scoreText = (TextView) itemView.findViewById(R.id.text_score);
+
     }
 }

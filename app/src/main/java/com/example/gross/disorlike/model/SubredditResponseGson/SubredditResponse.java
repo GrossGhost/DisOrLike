@@ -1,10 +1,10 @@
-package com.example.gross.disorlike.model;
+package com.example.gross.disorlike.model.SubredditResponseGson;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class RedditGson {
+public class SubredditResponse {
     @SerializedName("data")
     @Expose
     private Data data;

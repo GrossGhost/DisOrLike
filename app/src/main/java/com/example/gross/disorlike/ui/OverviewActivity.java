@@ -19,8 +19,11 @@ import com.example.gross.disorlike.R;
 import com.example.gross.disorlike.controller.EndlessScrollListener;
 import com.example.gross.disorlike.controller.RedditAdapter;
 import com.example.gross.disorlike.controller.RestManager;
-import com.example.gross.disorlike.model.RedditGson;
+import com.example.gross.disorlike.model.SubredditResponseGson.SubredditResponse;
 
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.gross.disorlike.ui.LoginActivity.COOKIE;
 import static com.example.gross.disorlike.ui.LoginActivity.MODHASH;
 import static com.example.gross.disorlike.ui.LoginActivity.REDDIT_SESSION;
 import static com.example.gross.disorlike.ui.LoginActivity.USERNAME;
@@ -38,9 +42,10 @@ public class OverviewActivity extends AppCompatActivity {
 
     @BindView(R.id.recViewReddit)
     RecyclerView recViewReddit;
-    private Intent fromLoginIntent;
-    private RedditAdapter redditAdapter;
 
+    private RedditAdapter redditAdapter;
+    private String currentUsername = "";
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +55,12 @@ public class OverviewActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fromLoginIntent = getIntent();
-        toolbar.setSubtitle("Logged, as " + fromLoginIntent.getStringExtra("Username"));
+        preferences = getSharedPreferences(REDDIT_SESSION,MODE_PRIVATE);
+
+        if (preferences.contains(USERNAME)) {
+            currentUsername = preferences.getString(USERNAME,"");
+            }
+        toolbar.setSubtitle("Logged, as " + currentUsername);
 
         redditAdapter = new RedditAdapter(getApplicationContext());
         recViewReddit.setHasFixedSize(true);
@@ -72,12 +81,22 @@ public class OverviewActivity extends AppCompatActivity {
 
 
     private void loadList() {
+        String modhash = "";
+        String cookie = "";
+        if (preferences.contains(MODHASH)){
+            modhash = preferences.getString(MODHASH,"");
+            cookie = preferences.getString(COOKIE,"");
+        }
+        HashMap<String,String> headerMap = new HashMap<>();
+        headerMap.put("X-Modhash", modhash);
+        headerMap.put("User-Agent", currentUsername);
+        headerMap.put("cookie", "reddit_session=" + cookie);
 
         RestManager restManager = new RestManager();
-        Call<RedditGson> call = restManager.getApiService().getAwwJson(redditAdapter.getlastLoadedItem());
-        call.enqueue(new Callback<RedditGson>() {
+        Call<SubredditResponse> call = restManager.getApiService().getAwwJson(headerMap, redditAdapter.getlastLoadedItem());
+        call.enqueue(new Callback<SubredditResponse>() {
             @Override
-            public void onResponse(@NonNull Call<RedditGson> call, @NonNull Response<RedditGson> response) {
+            public void onResponse(@NonNull Call<SubredditResponse> call, @NonNull Response<SubredditResponse> response) {
 
                 try{
                     for (int i = 0; i < response.body().getData().getChildren().size(); i++) {
@@ -89,11 +108,10 @@ public class OverviewActivity extends AppCompatActivity {
                     Log.e(TAG, "onResponse: NullPointerException" + e.getMessage());
                 }
 
-
             }
 
             @Override
-            public void onFailure(@NonNull Call<RedditGson> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<SubredditResponse> call, @NonNull Throwable t) {
                 Toast.makeText(OverviewActivity.this, "An Error Call", Toast.LENGTH_LONG).show();
             }
         });
@@ -111,12 +129,11 @@ public class OverviewActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.menu_logout) {
             new AlertDialog.Builder(this)
                     .setTitle("Logout")
-                    .setMessage("You logged as " + fromLoginIntent.getStringExtra("Username") + ". Do you really wont to logout?")
+                    .setMessage("You logged as " + currentUsername + ". Do you really wont to logout?")
                     .setNegativeButton("No", null)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferences preferences = getSharedPreferences(REDDIT_SESSION,MODE_PRIVATE);
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString(USERNAME, "");
                             editor.putString(MODHASH, "");

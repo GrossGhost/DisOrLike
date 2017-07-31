@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     public static final String REDDIT_SESSION = "Session";
     public static final String USERNAME = "Username";
     public static final String MODHASH = "Modhash";
+    public static final String COOKIE = "Cookie";
 
     private SharedPreferences preferences;
 
@@ -73,17 +74,18 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(@NonNull Call<LoginResponse> call, @NonNull Response<LoginResponse> response) {
                     try {
                         String modhash = response.body().getJson().getData().getModhash();
+                        String cookie = response.body().getJson().getData().getCookie();
                         if (!modhash.equals("")){
 
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString(USERNAME, user);
                             editor.putString(MODHASH, modhash);
+                            editor.putString(COOKIE, cookie);
                             editor.apply();
 
                             Toast.makeText(LoginActivity.this, "Login Successful", Toast.LENGTH_LONG).show();
 
                             Intent i = new Intent(getApplicationContext(), OverviewActivity.class);
-                            i.putExtra("Username", user);
                             startActivity(i);
                         }
                     }catch(NullPointerException e){
