@@ -9,8 +9,8 @@
     <string name="session_username">SessionUsername</string>
     <string name="session_modhash">SessionModhash</string>
     <string name="logout">Logout</string>
-    <string name="show_aww">Show aww subredit</string>
-    <string name="aprove_list">Show aprove list</string>
-    <string name="disprove_list">Show disprove list</string>
+    <string name="show_aww">Show aww subreddit</string>
+    <string name="approved_list">Show approved list</string>
+    <string name="disapproved_list">Show disapproved list</string>
 
 </resources>

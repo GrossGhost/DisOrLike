@@ -6,16 +6,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class PictureInfo {
 
-    @SerializedName("url")
-    @Expose
-    private String url;
     @SerializedName("title")
     @Expose
     private String title;
 
-    @SerializedName("subreddit")
+    @SerializedName("name")
     @Expose
-    private String subreddit;
+    private String name;
+
     @SerializedName("thumbnail")
     @Expose
     private String thumbnail;
@@ -28,6 +26,13 @@ public class PictureInfo {
     @Expose
     private String score;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getScore() {
         return score;
@@ -45,28 +50,12 @@ public class PictureInfo {
         this.likes = likes;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSubreddit() {
-        return subreddit;
-    }
-
-    public void setSubreddit(String subreddit) {
-        this.subreddit = subreddit;
     }
 
     public String getThumbnail() {

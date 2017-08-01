@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardViewReddit"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card:cardBackgroundColor="@android:color/holo_blue_bright"
+    android:background="@drawable/grey_border"
+    tools:ignore="ContentDescription"
+    card:cardBackgroundColor="#18ffff"
     card:cardElevation="5dp"
     card:cardUseCompatPadding="true"
     card:layout_collapseParallaxMultiplier="1.0">
@@ -40,36 +43,36 @@
             android:scaleType="fitXY" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignLeft="@+id/text_reddit"
             android:layout_alignStart="@+id/text_reddit"
-            android:layout_below="@+id/text_reddit">
+            android:layout_below="@+id/text_reddit"
+            android:orientation="horizontal">
 
 
             <ImageView
+                android:id="@+id/image_dislike"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                card:srcCompat="@drawable/ic_thumb_down_black_24dp"
                 android:layout_weight="1"
-                android:id="@+id/image_dislike" />
+                card:srcCompat="@drawable/ic_thumb_down_black_24dp" />
 
             <TextView
+                android:id="@+id/text_score"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/text_score"
-                android:textSize="18sp"
-                android:gravity="center"
                 android:layout_weight="0.5"
-                android:textColor="@android:color/black" />
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
             <ImageView
+                android:id="@+id/image_like"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                card:srcCompat="@drawable/ic_thumb_up_black_24dp"
-                android:id="@+id/image_like"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                card:srcCompat="@drawable/ic_thumb_up_black_24dp" />
 
         </LinearLayout>
 

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#00b7d3</color>
+    <color name="colorPrimaryDark">#0087a2</color>
+    <color name="colorPrimaryLight">#b4ffff</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="redditTeal">#0F85C1</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorGray">#C0C0C0</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+
 </resources>

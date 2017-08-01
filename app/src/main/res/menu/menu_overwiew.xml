@@ -5,11 +5,11 @@
         android:id="@+id/menu_show_aww"
         android:title="@string/show_aww" />
     <item
-        android:id="@+id/menu_aprove_list"
-        android:title="@string/aprove_list" />
+        android:id="@+id/menu_approved_list"
+        android:title="@string/approved_list" />
     <item
-        android:id="@+id/menu_disprove_list"
-        android:title="@string/disprove_list" />
+        android:id="@+id/menu_disapproved_list"
+        android:title="@string/disapproved_list" />
     <item
         android:id="@+id/menu_logout"
         android:title="@string/logout" />

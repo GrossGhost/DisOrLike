@@ -5,12 +5,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestManager {
 
-    public static final String BASE_URL = "https://www.reddit.com/";
+    private static final String BASE_URL = "https://www.reddit.com/";
 
-    private  ApiService apiService;
+    private ApiService apiService;
 
-    public ApiService getApiService(){
-        if (apiService == null){
+    public ApiService getApiService() {
+        if (apiService == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())

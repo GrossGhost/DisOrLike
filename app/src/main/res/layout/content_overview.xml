@@ -3,13 +3,11 @@
     android:id="@+id/content_overview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="?android:attr/actionBarSize"
-    >
+    android:layout_marginTop="?android:attr/actionBarSize">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recViewReddit"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -47,11 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         progressBar.setVisibility(View.GONE);
-        preferences = getSharedPreferences(REDDIT_SESSION,MODE_PRIVATE);
-        if (preferences.contains(MODHASH)){
-            if(!preferences.getString(MODHASH,"").equals("")){
+        preferences = getSharedPreferences(REDDIT_SESSION, MODE_PRIVATE);
+        if (preferences.contains(MODHASH)) {
+            if (!preferences.getString(MODHASH, "").equals("")) {
                 Intent i = new Intent(getApplicationContext(), OverviewActivity.class);
-                i.putExtra("Username", preferences.getString(USERNAME,""));
+                i.putExtra("Username", preferences.getString(USERNAME, ""));
                 startActivity(i);
             }
         }
@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final String user = username.getText().toString(), pass = password.getText().toString();
 
-        if (!user.equals("") && !pass.equals("")){
+        if (!user.equals("") && !pass.equals("")) {
             progressBar.setVisibility(View.VISIBLE);
             RestManager restManager = new RestManager();
             Call<LoginResponse> call = restManager.getApiService().signIn(user, user, pass, "json");
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         String modhash = response.body().getJson().getData().getModhash();
                         String cookie = response.body().getJson().getData().getCookie();
-                        if (!modhash.equals("")){
+                        if (!modhash.equals("")) {
 
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString(USERNAME, user);
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent i = new Intent(getApplicationContext(), OverviewActivity.class);
                             startActivity(i);
                         }
-                    }catch(NullPointerException e){
+                    } catch (NullPointerException e) {
                         Log.e(TAG, "onResponse: NullPointerException" + e.getMessage());
                     }
                     progressBar.setVisibility(View.GONE);
@@ -97,12 +97,13 @@ public class LoginActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                 }
             });
-        }else{
+        } else {
             Toast.makeText(this, "Wrong Input", Toast.LENGTH_LONG).show();
         }
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+    }
 
 }

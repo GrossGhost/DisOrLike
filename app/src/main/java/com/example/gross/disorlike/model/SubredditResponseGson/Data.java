@@ -13,9 +13,6 @@ public class Data {
     @SerializedName("after")
     @Expose
     private String after;
-    @SerializedName("before")
-    @Expose
-    private Object before;
 
     public List<Child> getChildren() {
         return children;
@@ -31,14 +28,6 @@ public class Data {
 
     public void setAfter(String after) {
         this.after = after;
-    }
-
-    public Object getBefore() {
-        return before;
-    }
-
-    public void setBefore(Object before) {
-        this.before = before;
     }
 
 }

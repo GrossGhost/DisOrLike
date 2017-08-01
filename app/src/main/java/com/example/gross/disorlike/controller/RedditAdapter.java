@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,29 +20,30 @@ import java.util.List;
 public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
 
     private LayoutInflater inflater;
-    private List<PictureInfo> pictureList;
+    public List<PictureInfo> pictureList;
     private String nameOfNextItem;
 
-    public RedditAdapter(Context context){
+    public RedditAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
         this.pictureList = new ArrayList<>();
         this.nameOfNextItem = "";
     }
 
-    public void addItem (PictureInfo pictureItem){
+    public void addItem(PictureInfo pictureItem) {
         this.pictureList.add(pictureItem);
     }
 
-    public String getNameOfNextItem(){
+    public String getNameOfNextItem() {
         return this.nameOfNextItem;
     }
-    public void setNameOfNextItem(String lastItem){
+
+    public void setNameOfNextItem(String lastItem) {
         this.nameOfNextItem = lastItem;
     }
 
     @Override
     public RecyclerViewHolders onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = inflater.inflate(R.layout.item_reddit,parent, false);
+        View layoutView = inflater.inflate(R.layout.item_reddit, parent, false);
         return new RecyclerViewHolders(layoutView);
     }
 
@@ -60,11 +60,11 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
         holder.likeImage.setImageResource(R.drawable.ic_thumb_up_black_24dp);
 
         Boolean likes = pictureList.get(position).getLikes();
-        Log.d("LIKES", ""+likes);
-        if (likes != null ){
-            if (likes){
+        Log.d("LIKES", "" + likes);
+        if (likes != null) {
+            if (likes) {
                 holder.likeImage.setImageResource(R.drawable.ic_thumb_up_green_24dp);
-            }else{
+            } else {
                 holder.dislikeImage.setImageResource(R.drawable.ic_thumb_down_red_24dp);
             }
         }
@@ -77,7 +77,7 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
 
 }
 
-class RecyclerViewHolders extends RecyclerView.ViewHolder{
+class RecyclerViewHolders extends RecyclerView.ViewHolder {
 
     ImageView redditImage, likeImage, dislikeImage;
     TextView redditText, scoreText;
