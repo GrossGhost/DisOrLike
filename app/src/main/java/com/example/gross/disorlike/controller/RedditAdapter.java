@@ -22,23 +22,23 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
 
     private LayoutInflater inflater;
     private List<PictureInfo> pictureList;
-    private String lastLoadedItem;
+    private String nameOfNextItem;
 
     public RedditAdapter(Context context){
         this.inflater = LayoutInflater.from(context);
         this.pictureList = new ArrayList<>();
-        this.lastLoadedItem = "";
+        this.nameOfNextItem = "";
     }
 
     public void addItem (PictureInfo pictureItem){
         this.pictureList.add(pictureItem);
     }
 
-    public String getlastLoadedItem(){
-        return this.lastLoadedItem;
+    public String getNameOfNextItem(){
+        return this.nameOfNextItem;
     }
-    public void setlastLoadedItem(String lastItem){
-        this.lastLoadedItem = lastItem;
+    public void setNameOfNextItem(String lastItem){
+        this.nameOfNextItem = lastItem;
     }
 
     @Override
@@ -51,6 +51,8 @@ public class RedditAdapter extends RecyclerView.Adapter<RecyclerViewHolders> {
     public void onBindViewHolder(RecyclerViewHolders holder, int position) {
         Picasso.with(holder.itemView.getContext())
                 .load(pictureList.get(position).getThumbnail())
+                .placeholder(R.drawable.placeholder_reddit_image)
+                .resize(200, 200)
                 .into(holder.redditImage);
         holder.redditText.setText(pictureList.get(position).getTitle());
         holder.scoreText.setText(pictureList.get(position).getScore());

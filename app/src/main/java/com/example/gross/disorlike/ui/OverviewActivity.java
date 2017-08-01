@@ -23,7 +23,6 @@ import com.example.gross.disorlike.model.SubredditResponseGson.SubredditResponse
 
 
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,6 +38,9 @@ import static com.example.gross.disorlike.ui.LoginActivity.USERNAME;
 public class OverviewActivity extends AppCompatActivity {
 
     private static final String TAG = "OverviewActivity";
+    private static final String AWW_LIST = "Subreddit AWW";
+    private static final String APPROVED_LIST = "Approved List";
+    private static final String DISAPPROVED_LIST = "Disapproved List";
 
     @BindView(R.id.recViewReddit)
     RecyclerView recViewReddit;
@@ -46,6 +48,7 @@ public class OverviewActivity extends AppCompatActivity {
     private RedditAdapter redditAdapter;
     private String currentUsername = "";
     private SharedPreferences preferences;
+    private RestManager restManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,9 @@ public class OverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(AWW_LIST);
         setSupportActionBar(toolbar);
+
 
         preferences = getSharedPreferences(REDDIT_SESSION,MODE_PRIVATE);
 
@@ -62,6 +67,7 @@ public class OverviewActivity extends AppCompatActivity {
             }
         toolbar.setSubtitle("Logged, as " + currentUsername);
 
+        restManager = new RestManager();
         redditAdapter = new RedditAdapter(getApplicationContext());
         recViewReddit.setHasFixedSize(true);
         recViewReddit.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -70,15 +76,13 @@ public class OverviewActivity extends AppCompatActivity {
         recViewReddit.addOnScrollListener(new EndlessScrollListener((LinearLayoutManager) recViewReddit.getLayoutManager()) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                loadList();
-
+                if (redditAdapter.getNameOfNextItem() != null) {
+                    loadList();
+                }
             }
         });
-
         loadList();
-
     }
-
 
     private void loadList() {
         String modhash = "";
@@ -92,8 +96,26 @@ public class OverviewActivity extends AppCompatActivity {
         headerMap.put("User-Agent", currentUsername);
         headerMap.put("cookie", "reddit_session=" + cookie);
 
-        RestManager restManager = new RestManager();
-        Call<SubredditResponse> call = restManager.getApiService().getAwwJson(headerMap, redditAdapter.getlastLoadedItem());
+        Call<SubredditResponse> call = restManager.getApiService().getAwwJson(headerMap, redditAdapter.getNameOfNextItem());
+        if (getSupportActionBar() != null) {
+            switch (getSupportActionBar().getTitle()+"") {
+                case APPROVED_LIST :
+                    call = restManager.getApiService().getUpvotedJson(
+                            headerMap,
+                            currentUsername,
+                            redditAdapter.getNameOfNextItem()
+                    );
+                    break;
+                case DISAPPROVED_LIST :
+                    call = restManager.getApiService().getDownvotedJson(
+                            headerMap,
+                            currentUsername,
+                            redditAdapter.getNameOfNextItem()
+                    );
+                    break;
+            }
+        }
+
         call.enqueue(new Callback<SubredditResponse>() {
             @Override
             public void onResponse(@NonNull Call<SubredditResponse> call, @NonNull Response<SubredditResponse> response) {
@@ -102,7 +124,7 @@ public class OverviewActivity extends AppCompatActivity {
                     for (int i = 0; i < response.body().getData().getChildren().size(); i++) {
                         redditAdapter.addItem(response.body().getData().getChildren().get(i).getData());
                     }
-                    redditAdapter.setlastLoadedItem(response.body().getData().getAfter());
+                    redditAdapter.setNameOfNextItem(response.body().getData().getAfter());
                     redditAdapter.notifyDataSetChanged();
                 }catch (NullPointerException e){
                     Log.e(TAG, "onResponse: NullPointerException" + e.getMessage());
@@ -115,7 +137,6 @@ public class OverviewActivity extends AppCompatActivity {
                 Toast.makeText(OverviewActivity.this, "An Error Call", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     @Override
@@ -125,25 +146,75 @@ public class OverviewActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_logout) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Logout")
-                    .setMessage("You logged as " + currentUsername + ". Do you really wont to logout?")
-                    .setNegativeButton("No", null)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString(USERNAME, "");
-                            editor.putString(MODHASH, "");
-                            editor.apply();
-
-                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(i);
-                        }
-                    }).create().show();
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (getSupportActionBar() != null) {
+            switch (getSupportActionBar().getTitle()+"") {
+                case AWW_LIST :
+                    menu.findItem(R.id.menu_show_aww).setVisible(false);
+                    menu.findItem(R.id.menu_aprove_list).setVisible(true);
+                    menu.findItem(R.id.menu_disprove_list).setVisible(true);
+                    break;
+                case APPROVED_LIST :
+                    menu.findItem(R.id.menu_show_aww).setVisible(true);
+                    menu.findItem(R.id.menu_aprove_list).setVisible(false);
+                    menu.findItem(R.id.menu_disprove_list).setVisible(true);
+                    break;
+                case DISAPPROVED_LIST :
+                    menu.findItem(R.id.menu_show_aww).setVisible(true);
+                    menu.findItem(R.id.menu_aprove_list).setVisible(true);
+                    menu.findItem(R.id.menu_disprove_list).setVisible(false);
+                    break;
+            }
         }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+        switch (id){
+            case R.id.menu_show_aww :
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(AWW_LIST);
+                }
+                break;
+            case R.id.menu_aprove_list :
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(APPROVED_LIST);
+                }
+                break;
+            case R.id.menu_disprove_list :
+                if (getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(DISAPPROVED_LIST);
+                }
+                break;
+            case R.id.menu_logout :
+                new AlertDialog.Builder(this)
+                        .setTitle("Logout")
+                        .setMessage("You logged as " + currentUsername + ". Do you really wont to logout?")
+                        .setNegativeButton("No", null)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString(USERNAME, "");
+                                editor.putString(MODHASH, "");
+                                editor.apply();
+
+                                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                                startActivity(i);
+                            }
+                        }).create().show();
+                break;
+        }
+
+        if (id == R.id.menu_show_aww || id == R.id.menu_aprove_list || id == R.id.menu_disprove_list){
+            redditAdapter = new RedditAdapter(getApplicationContext());
+            recViewReddit.setAdapter(redditAdapter);
+            loadList();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 

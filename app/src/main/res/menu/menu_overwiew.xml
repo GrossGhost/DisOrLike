@@ -2,6 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/menu_show_aww"
+        android:title="@string/show_aww" />
+    <item
+        android:id="@+id/menu_aprove_list"
+        android:title="@string/aprove_list" />
+    <item
+        android:id="@+id/menu_disprove_list"
+        android:title="@string/disprove_list" />
+    <item
         android:id="@+id/menu_logout"
         android:title="@string/logout" />
 

@@ -17,7 +17,18 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     @GET("r/aww.json")
-    Call<SubredditResponse> getAwwJson(@HeaderMap HashMap<String,String> headerMap, @Query("after") String afterItemName);
+    Call<SubredditResponse> getAwwJson(@HeaderMap HashMap<String,String> headerMap,
+                                       @Query("after") String afterItemName);
+
+    @GET("user/{user}/upvoted.json")
+    Call<SubredditResponse> getUpvotedJson(@HeaderMap HashMap<String,String> headerMap,
+                                           @Path("user") String username,
+                                           @Query("after") String afterItemName);
+
+    @GET("user/{user}/downvoted.json")
+    Call<SubredditResponse> getDownvotedJson(@HeaderMap HashMap<String,String> headerMap,
+                                             @Path("user") String username,
+                                             @Query("after") String afterItemName);
 
     @POST("api/login/{user}")
     Call<LoginResponse> signIn(
